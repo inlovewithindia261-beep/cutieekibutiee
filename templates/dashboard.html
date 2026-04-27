@@ -1,33 +1,44 @@
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            background: #020617;
+            color: white;
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .log {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
+
 <body>
 
-<h1>Visitor Logs</h1>
-
-<table border="1">
-<tr>
-    <th>Time</th>
-    <th>Device</th>
-    <th>Platform</th>
-    <th>Screen</th>
-    <th>Location</th>
-</tr>
+<h1>Logs</h1>
 
 {% for log in logs %}
-<tr>
-    <td>{{ log.time }}</td>
-    <td>{{ log.device }}</td>
-    <td>{{ log.platform }}</td>
-    <td>{{ log.screen }}</td>
-    <td>{{ log.location }}</td>
-</tr>
+<div class="log">
+    <p><b>Time:</b> {{ log.time }}</p>
+    <p><b>IP:</b> {{ log.ip }}</p>
+    <p><b>Device:</b> {{ log.device }}</p>
+    <p><b>Platform:</b> {{ log.platform }}</p>
+    <p><b>Screen:</b> {{ log.screen }}</p>
+    <p><b>Location:</b> {{ log.location }}</p>
+</div>
 {% endfor %}
-
-</table>
 
 </body>
 </html>
