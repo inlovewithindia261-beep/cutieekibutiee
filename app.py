@@ -1,17 +1,18 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, render_template, request, jsonify
+import os
 from datetime import datetime
 
-app = Flask(__name__)
+app = Flask(name)
 
 logs = []
 
-@app.route("/")
+@app.route('/')
 def home():
-    return render_template("index.html")
+    return render_template('index.html')
 
-@app.route("/collect", methods=["POST"])
+@app.route('/collect', methods=['POST'])
 def collect():
-    data = request.json
+    data = request.get_json()
 
     log = {
         "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -19,19 +20,18 @@ def collect():
         "platform": data.get("platform"),
         "screen": data.get("screen"),
         "location": data.get("location"),
-        "note": "User consented"
+        "ip": request.remote_addr
     }
 
     logs.append(log)
+
     return jsonify({"status": "ok"})
 
-@app.route("/dashboard")
+@app.route('/dashboard')
 def dashboard():
-    return render_template("dashboard.html", logs=logs[::-1])
+    return render_template('dashboard.html', logs=logs)
 
-if __name__ == "__main__":
-    import os
-
-if __name__ == "__main__":
+# 🔥 Railway fix
+if name == "main":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
