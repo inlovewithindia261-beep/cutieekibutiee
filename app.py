@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify
 import os
 from datetime import datetime
 
-app = Flask(name)
+app = Flask(__name__)
 
 logs = []
 
@@ -31,7 +31,6 @@ def collect():
 def dashboard():
     return render_template('dashboard.html', logs=logs)
 
-# 🔥 Railway fix
-if name == "main":
+if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
