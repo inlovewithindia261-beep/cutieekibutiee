@@ -1,1 +1,33 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+
+<h1>Visitor Logs</h1>
+
+<table border="1">
+<tr>
+    <th>Time</th>
+    <th>Device</th>
+    <th>Platform</th>
+    <th>Screen</th>
+    <th>Location</th>
+</tr>
+
+{% for log in logs %}
+<tr>
+    <td>{{ log.time }}</td>
+    <td>{{ log.device }}</td>
+    <td>{{ log.platform }}</td>
+    <td>{{ log.screen }}</td>
+    <td>{{ log.location }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</body>
+</html>
