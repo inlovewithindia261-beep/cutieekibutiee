@@ -21,7 +21,7 @@
             align-items: center;
         }
 
-        /* 🔥 LOADER SCREEN */
+        
         .loader-screen {
             position: fixed;
             width: 100%;
@@ -46,7 +46,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* 🔥 MAIN CONTENT */
+    
         .card {
             width: 90%;
             max-width: 350px;
@@ -107,12 +107,11 @@
 
 <body>
 
-<!-- 🔄 Loader -->
+
 <div class="loader-screen" id="loader">
     <div class="spinner"></div>
 </div>
 
-<!-- 💎 Main UI -->
 <div class="card" id="mainCard">
     <h1>AA GYE AP👀</h1>
     <p>LAADLE KUCH JAADU DEKHNA?</p>
@@ -126,7 +125,7 @@
 </div>
 
 <script>
-// 🔥 Loader logic
+
 window.onload = function() {
     setTimeout(() => {
         document.getElementById("loader").style.display = "none";
